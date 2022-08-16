@@ -1,5 +1,5 @@
 name: "Setup GH CLI"
-description: "Setup GH CLI in self-hosted runners. In github cloud hosted runners, gh cli is auto installed. This action is to setup gh cli in self-hosted runners"
+description: "Setup GH CLI in self-hosted runners. This action is to setup gh cli in self-hosted runners"
 author: "ksivamuthu"
 inputs:
   version: 
