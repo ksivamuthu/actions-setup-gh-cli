@@ -5,7 +5,6 @@ inputs:
   version: 
     required: false
     description: 'gh cli version to download'
-    default: 'latest version from the gh releases page'
 runs:
   using: 'node16'
   main: 'dist/index.js'
