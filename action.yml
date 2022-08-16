@@ -1,11 +1,11 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: "Setup GH CLI"
+description: "Setup GH CLI in self-hosted runners. In github cloud hosted runners, gh cli is auto installed. This action is to setup gh cli in self-hosted runners"
+author: "ksivamuthu"
 inputs:
-  milliseconds: # change this
-    required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+  version: 
+    required: false
+    description: 'gh cli version to download'
+    default: 'latest version from the gh releases page'
 runs:
   using: 'node16'
   main: 'dist/index.js'
