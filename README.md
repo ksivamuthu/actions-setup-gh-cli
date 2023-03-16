@@ -12,9 +12,9 @@ To install the gh cli, use the actions as below:
       steps:
         - uses: actions/checkout@v2
         - name: Install the gh cli
-          uses: ksivamuthu/gh-cli-action
+          uses: ksivamuthu/actions-setup-gh-cli@0.0.1
           with:
-            version: 2.12.1
+            version: 2.24.3
         - run: |
             gh version
    ```
