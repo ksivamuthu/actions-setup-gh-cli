@@ -25,7 +25,7 @@ async function install(): Promise<void> {
 
   const version = core.getInput('version') || (await getLatestVersion())
 
-  const platform = os.platform()
+  const platform = core.getInput('platform') || os.platform()
   const packageUrl = `https://github.com/cli/cli/releases/download/v${version}/gh_${version}_${platform}_amd64.tar.gz`
 
   core.info(`Downloading gh cli from ${packageUrl}`)
