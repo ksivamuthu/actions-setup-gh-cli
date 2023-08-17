@@ -64,7 +64,7 @@ function install() {
     return __awaiter(this, void 0, void 0, function* () {
         core.info('Installing gh cli in self hosted runner');
         const version = core.getInput('version') || (yield getLatestVersion());
-        const platform = os.platform();
+        const platform = core.getInput('platform') || os.platform();
         const packageUrl = `https://github.com/cli/cli/releases/download/v${version}/gh_${version}_${platform}_amd64.tar.gz`;
         core.info(`Downloading gh cli from ${packageUrl}`);
         let cliPath = (0, tool_cache_1.find)(GH_CLI_TOOL_NAME, version);
