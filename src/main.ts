@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
 import * as os from 'os'
 
-import {cacheFile, downloadTool, extractTar, find} from '@actions/tool-cache'
+import {cacheFile, downloadTool, extractTar, find, extractZip} from '@actions/tool-cache'
 import {chmodSync} from 'fs'
 import {HttpClient} from '@actions/http-client'
 
@@ -26,7 +26,8 @@ async function install(): Promise<void> {
   const version = core.getInput('version') || (await getLatestVersion())
 
   const platform = core.getInput('platform') || os.platform()
-  const packageUrl = `https://github.com/cli/cli/releases/download/v${version}/gh_${version}_${platform}_amd64.tar.gz`
+  const archive_format = core.getInput('archive_format') || 'tar.gz'
+  const packageUrl = `https://github.com/cli/cli/releases/download/v${version}/gh_${version}_${platform}_amd64.${archive_format}`
 
   core.info(`Downloading gh cli from ${packageUrl}`)
 
@@ -35,7 +36,7 @@ async function install(): Promise<void> {
   if (!cliPath) {
     const downloadPath = await downloadTool(packageUrl, 'gh_tar')
     chmodSync(downloadPath, '755')
-    cliPath = await extractTar(downloadPath, find(GH_CLI_TOOL_NAME, version))
+    cliPath = archive_format === 'tar.gz' ? await extractTar(downloadPath, find(GH_CLI_TOOL_NAME, version)) : await extractZip(downloadPath, find(GH_CLI_TOOL_NAME, version))
     cliPath = await cacheFile(
       `${cliPath}/gh_${version}_${platform}_amd64/bin/gh`,
       'gh',
