@@ -5,6 +5,9 @@ inputs:
   version: 
     required: false
     description: 'gh cli version to download'
+  archive_format:
+    required: false
+    description: 'the format of the archive that is published at: github.com/cli/cli/releases (defaults to .tar.gz)'
 runs:
   using: 'node16'
   main: 'dist/index.js'
