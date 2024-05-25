@@ -1,7 +1,13 @@
 import * as core from '@actions/core'
 import * as os from 'os'
 
-import {cacheFile, downloadTool, extractTar, find, extractZip} from '@actions/tool-cache'
+import {
+  cacheFile,
+  downloadTool,
+  extractTar,
+  find,
+  extractZip
+} from '@actions/tool-cache'
 import {chmodSync} from 'fs'
 import {HttpClient} from '@actions/http-client'
 
@@ -36,7 +42,10 @@ async function install(): Promise<void> {
   if (!cliPath) {
     const downloadPath = await downloadTool(packageUrl, 'gh_tar')
     chmodSync(downloadPath, '755')
-    cliPath = archive_format === 'tar.gz' ? await extractTar(downloadPath, find(GH_CLI_TOOL_NAME, version)) : await extractZip(downloadPath, find(GH_CLI_TOOL_NAME, version))
+    cliPath =
+      archive_format === 'tar.gz'
+        ? await extractTar(downloadPath, find(GH_CLI_TOOL_NAME, version))
+        : await extractZip(downloadPath, find(GH_CLI_TOOL_NAME, version))
     cliPath = await cacheFile(
       `${cliPath}/gh_${version}_${platform}_amd64/bin/gh`,
       'gh',
