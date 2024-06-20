@@ -44,7 +44,16 @@ const os = __importStar(__nccwpck_require__(2037));
 const tool_cache_1 = __nccwpck_require__(7784);
 const fs_1 = __nccwpck_require__(7147);
 const http_client_1 = __nccwpck_require__(6255);
+const node_stream_1 = __nccwpck_require__(4492);
+const node_util_1 = __nccwpck_require__(7261);
+const node_fs_1 = __nccwpck_require__(7561);
 const GH_CLI_TOOL_NAME = 'gh';
+const TOKEN = core.getInput('token');
+const AUTH_HTTP = new http_client_1.HttpClient('gh-release', [], {
+    headers: {
+        Authorization: `Bearer ${TOKEN}`
+    }
+});
 run();
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -70,13 +79,19 @@ function install() {
         core.info(`Downloading gh cli from ${packageUrl}`);
         let cliPath = (0, tool_cache_1.find)(GH_CLI_TOOL_NAME, version);
         if (!cliPath) {
-            const downloadPath = yield (0, tool_cache_1.downloadTool)(packageUrl, 'gh_tar');
+            const downloadPath = 'gh_tar'; // Temporary file path
+            const response = yield AUTH_HTTP.get(packageUrl);
+            if (response.message.statusCode !== 200) {
+                throw new Error(`Unexpected HTTP response: ${response.message.statusCode}`);
+            }
+            yield (0, node_util_1.promisify)(node_stream_1.pipeline)(response.message, (0, node_fs_1.createWriteStream)(downloadPath));
             (0, fs_1.chmodSync)(downloadPath, '755');
             cliPath =
                 archive_format === 'tar.gz'
                     ? yield (0, tool_cache_1.extractTar)(downloadPath, (0, tool_cache_1.find)(GH_CLI_TOOL_NAME, version))
                     : yield (0, tool_cache_1.extractZip)(downloadPath, (0, tool_cache_1.find)(GH_CLI_TOOL_NAME, version));
             cliPath = yield (0, tool_cache_1.cacheFile)(`${cliPath}/gh_${version}_${platform}_amd64/bin/gh`, 'gh', GH_CLI_TOOL_NAME, version);
+            (0, fs_1.unlinkSync)(downloadPath);
         }
         core.addPath(cliPath);
         core.info('gh cli installed successfully');
@@ -84,8 +99,7 @@ function install() {
 }
 function getLatestVersion() {
     return __awaiter(this, void 0, void 0, function* () {
-        const http = new http_client_1.HttpClient('gh-release');
-        const response = yield http.getJson('https://api.github.com/repos/cli/cli/releases/latest');
+        const response = yield AUTH_HTTP.getJson('https://api.github.com/repos/cli/cli/releases/latest');
         let latestVersion = response.result.tag_name;
         latestVersion = latestVersion.startsWith('v')
             ? latestVersion.substring(1)
@@ -6728,6 +6742,30 @@ module.exports = require("https");
 
 "use strict";
 module.exports = require("net");
+
+/***/ }),
+
+/***/ 7561:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("node:fs");
+
+/***/ }),
+
+/***/ 4492:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("node:stream");
+
+/***/ }),
+
+/***/ 7261:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("node:util");
 
 /***/ }),
 

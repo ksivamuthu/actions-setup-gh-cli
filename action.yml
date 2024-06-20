@@ -2,7 +2,10 @@ name: "Setup gh cli"
 description: "Setup gh cli in self-hosted runners. This action is to setup gh cli in self-hosted runners"
 author: "ksivamuthu"
 inputs:
-  version: 
+  token:
+    description: 'GitHub token to avoid rate-limiting'
+    required: true
+  version:
     required: false
     description: 'gh cli version to download'
   archive_format:
