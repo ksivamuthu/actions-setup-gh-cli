@@ -45,6 +45,7 @@ const tool_cache_1 = __nccwpck_require__(7784);
 const fs_1 = __nccwpck_require__(7147);
 const http_client_1 = __nccwpck_require__(6255);
 const GH_CLI_TOOL_NAME = 'gh';
+const DOWNLOAD_PATH = '/tmp/gh_tar';
 run();
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -67,10 +68,10 @@ function install() {
         const platform = core.getInput('platform') || os.platform();
         const archive_format = core.getInput('archive_format') || 'tar.gz';
         const packageUrl = `https://github.com/cli/cli/releases/download/v${version}/gh_${version}_${platform}_amd64.${archive_format}`;
-        core.info(`Downloading gh cli from ${packageUrl}`);
+        core.info(`Downloading gh cli from ${packageUrl} to ${DOWNLOAD_PATH}`);
         let cliPath = (0, tool_cache_1.find)(GH_CLI_TOOL_NAME, version);
         if (!cliPath) {
-            const downloadPath = yield (0, tool_cache_1.downloadTool)(packageUrl, 'gh_tar');
+            const downloadPath = yield (0, tool_cache_1.downloadTool)(packageUrl, DOWNLOAD_PATH);
             (0, fs_1.chmodSync)(downloadPath, '755');
             cliPath =
                 archive_format === 'tar.gz'

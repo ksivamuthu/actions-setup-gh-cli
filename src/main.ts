@@ -12,6 +12,7 @@ import {chmodSync} from 'fs'
 import {HttpClient} from '@actions/http-client'
 
 const GH_CLI_TOOL_NAME = 'gh'
+const DOWNLOAD_PATH = '/tmp/gh_tar'
 
 run()
 
@@ -35,12 +36,12 @@ async function install(): Promise<void> {
   const archive_format = core.getInput('archive_format') || 'tar.gz'
   const packageUrl = `https://github.com/cli/cli/releases/download/v${version}/gh_${version}_${platform}_amd64.${archive_format}`
 
-  core.info(`Downloading gh cli from ${packageUrl}`)
+  core.info(`Downloading gh cli from ${packageUrl} to ${DOWNLOAD_PATH}`)
 
   let cliPath = find(GH_CLI_TOOL_NAME, version)
 
   if (!cliPath) {
-    const downloadPath = await downloadTool(packageUrl, 'gh_tar')
+    const downloadPath = await downloadTool(packageUrl, DOWNLOAD_PATH)
     chmodSync(downloadPath, '755')
     cliPath =
       archive_format === 'tar.gz'
