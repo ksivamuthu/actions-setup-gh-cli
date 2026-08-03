@@ -9,5 +9,5 @@ inputs:
     required: false
     description: 'the format of the archive that is published at: github.com/cli/cli/releases (defaults to .tar.gz)'
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/index.js'
